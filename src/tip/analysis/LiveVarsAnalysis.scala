@@ -16,7 +16,7 @@ abstract class LiveVarsAnalysis(cfg: IntraproceduralProgramCfg)(implicit declDat
 
   import AstNodeData._
 
-  val allVars = cfg.nodes.flatMap(_.appearingIds)
+  val allVars: Set[ADeclaration] = cfg.nodes.flatMap(_.appearingIds)
 
   val lattice = new MapLattice(cfg.nodes, new PowersetLattice(allVars))
 
@@ -25,16 +25,16 @@ abstract class LiveVarsAnalysis(cfg: IntraproceduralProgramCfg)(implicit declDat
       case _: CfgFunExitNode => lattice.sublattice.bottom
       case r: CfgStmtNode =>
         r.data match {
-          case cond: AExpr => ??? //<--- Complete here
           case ass: AAssignStmt =>
             ass.left match {
-              case id: AIdentifier => ??? //<--- Complete here
-              case _ => ???
+              case id: AIdentifier => ass.right.appearingIds union (s - id)
+              case unaryOp: AUnaryOp[_] => unaryOp.operator match {
+                case DerefOp => ass.right.appearingIds union (s + unaryOp.target)
+              }
+              case _ => s union ass.right.appearingIds
             }
-          case varr: AVarStmt => ??? //<--- Complete here
-          case ret: AReturnStmt => ??? //<--- Complete here
-          case out: AOutputStmt => ??? //<--- Complete here
-          case _ => s
+          case varr: AVarStmt => s.diff(varr.declIds.toSet)
+          case expr => s union expr.appearingIds
         }
       case _ => s
     }

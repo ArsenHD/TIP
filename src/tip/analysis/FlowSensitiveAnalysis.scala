@@ -53,7 +53,7 @@ object FlowSensitiveAnalysis {
           case Analysis.livevars => new LiveVarsAnalysisSimpleSolver(typedCfg.left.get)
           case Analysis.available => new AvailableExpAnalysisSimpleSolver(typedCfg.left.get)
           //case Analysis.vbusy => new VeryBusyExpAnalysisSimpleSolver(typedCfg.left.get) <--- Complete here
-          //case Analysis.reaching => new ReachingDefAnalysisSimpleSolver(typedCfg.left.get) <--- Complete here
+          case Analysis.reaching => new ReachingDefAnalysisSimpleSolver(typedCfg.left.get)
           case Analysis.constprop => new ConstantPropagationAnalysisSimpleSolver(typedCfg.left.get)
           case _ => throw new RuntimeException(s"Unsupported solver option `$options` for the analysis $kind")
         })
@@ -63,7 +63,7 @@ object FlowSensitiveAnalysis {
           case Analysis.livevars => new LiveVarsAnalysisWorklistSolver(typedCfg.left.get)
           case Analysis.available => new AvailableExpAnalysisWorklistSolver(typedCfg.left.get)
           //case Analysis.vbusy => new VeryBusyExpAnalysisWorklistSolver(typedCfg.left.get) <--- Complete here
-          //case Analysis.reaching => new ReachingDefAnalysisWorklistSolver(typedCfg.left.get) <--- Complete here
+          case Analysis.reaching => new ReachingDefAnalysisWorklistSolver(typedCfg.left.get)
           case Analysis.constprop => new ConstantPropagationAnalysisWorklistSolver(typedCfg.left.get)
           case _ => throw new RuntimeException(s"Unsupported solver option `$options` for the analysis $kind")
         })
