@@ -124,7 +124,7 @@ class IntervalAnalysisWorklistSolverWithWidening(cfg: ProgramCfg)(implicit declD
     import lattice.sublattice._
     s match {
       case lattice.sublattice.Bottom => s
-      case lattice.sublattice.Lift(m) => ??? //<--- Complete here
+      case lattice.sublattice.Lift(m) => m.map { case (varr, (l, r)) => (varr, (maxB(l), minB(r))) }
     }
   }
 }
